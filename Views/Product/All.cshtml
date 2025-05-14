@@ -1,0 +1,64 @@
+﻿@model AEConnect.Models.ProductFilterViewModel
+
+@{
+    ViewData["Title"] = "All Products";
+}
+
+<h2>All Farmer Products</h2>
+
+<form asp-action="Filter" method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label asp-for="SelectedFarmerId" class="form-label">Farmer</label>
+        <select asp-for="SelectedFarmerId" class="form-select" asp-items="Model.Farmers">
+            <option value="">-- All Farmers --</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Category" class="form-label">Category</label>
+        <input asp-for="Category" class="form-control" />
+    </div>
+
+    <div class="col-md-2">
+        <label asp-for="StartDate" class="form-label">Start Date</label>
+        <input asp-for="StartDate" type="date" class="form-control" />
+    </div>
+
+    <div class="col-md-2">
+        <label asp-for="EndDate" class="form-label">End Date</label>
+        <input asp-for="EndDate" type="date" class="form-control" />
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Farmer</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Production Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.Farmer?.FullName</td>
+                    <td>@product.ProductName</td>
+                    <td>@product.Category</td>
+                    <td>@product.ProductionDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No products found matching the selected criteria.</p>
+}

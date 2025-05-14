@@ -1,0 +1,40 @@
+﻿@model Farmer
+
+@{
+    ViewData["Title"] = "Farmer Details";
+}
+
+<h2>@Model.FullName</h2>
+
+<p><strong>Email:</strong> @Model.Email</p>
+<p><strong>Phone:</strong> @Model.PhoneNumber</p>
+<p><strong>Location:</strong> @Model.Location</p>
+
+<h4>Products</h4>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Production Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.ProductName</td>
+                    <td>@p.Category</td>
+                    <td>@p.ProductionDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No products found for this farmer.</p>
+}
