@@ -1,8 +1,45 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Agri-Energy Connect";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Welcome to Agri-Energy Connect</h1>
+        <p class="lead">Empowering South African farmers with green energy solutions</p>
+    </div>
+
+    <hr />
+
+    <div class="row text-center mt-4">
+        <div class="col-md-4">
+           
+            <h3>For Farmers</h3>
+            <p>Access affordable renewable energy options, market products, and receive training.</p>
+            <a class="btn btn-success" asp-controller="Farmer" asp-action="Register">Join as Farmer</a>
+        </div>
+
+        <div class="col-md-4">
+           
+            <h3>For Providers</h3>
+            <p>Offer your solar and wind energy products to verified farmers across SA.</p>
+            <a class="btn btn-primary" asp-controller="Provider" asp-action="Register">Register as Provider</a>
+        </div>
+
+        <div class="col-md-4">
+           
+            <h3>For Employees</h3>
+            <p>Manage claims, verify projects, and support users across the platform.</p>
+            <a class="btn btn-dark" asp-controller="Employee" asp-action="Login">Employee Portal</a>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <h4>Explore Our Features</h4>
+        <ul class="list-unstyled">
+            <li>✔️ Green Energy Marketplace</li>
+            <li>✔️ Agricultural Training Modules</li>
+            <li>✔️ Project Collaboration Tools</li>
+            <li>✔️ Bilingual & Accessible UI</li>
+        </ul>
+    </div>
 </div>

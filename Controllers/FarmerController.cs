@@ -1,56 +1,73 @@
-﻿using AEConnect.Data;
-using AEConnect.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AEConnect.Data;
+using AEConnect.Models;
 
-[Authorize(Roles = "Employee")]
-public class FarmerController : Controller
+[Authorize(Roles = "Farmer")]
+public class ProductController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public FarmerController(ApplicationDbContext context)
+    public ProductController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
-    // GET: Farmer
-    public async Task<IActionResult> Index()
+    // GET: Product/Add
+    public async Task<IActionResult> Add()
     {
-        return View(await _context.Farmers.ToListAsync());
-    }
+        // Ensure the Farmer exists
+        var email = User.Identity?.Name;
+        var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == email);
+        if (farmer == null)
+        {
+            return RedirectToAction("Create", "Farmer"); // ask user to create their profile
+        }
 
-    // GET: Farmer/Create
-    public IActionResult Create()
-    {
         return View();
     }
 
-    // POST: Farmer/Create
+    // POST: Product/Add
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Farmer farmer)
+    public async Task<IActionResult> Add(Product product)
     {
+        var email = User.Identity?.Name;
+        var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == email);
+        if (farmer == null)
+        {
+            return RedirectToAction("Create", "Farmer");
+        }
+
         if (ModelState.IsValid)
         {
-            _context.Add(farmer);
+            product.FarmerId = farmer.FarmerId;
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyProducts));
         }
-        return View(farmer);
+
+        return View(product);
     }
 
-    // GET: Farmer/Details/5
-    public async Task<IActionResult> Details(int? id)
+    // GET: Product/MyProducts
+    public async Task<IActionResult> MyProducts()
     {
-        if (id == null) return NotFound();
+        var email = User.Identity?.Name;
+        var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.Email == email);
+        if (farmer == null)
+        {
+            return RedirectToAction("Create", "Farmer");
+        }
 
-        var farmer = await _context.Farmers
-            .Include(f => f.Products)
-            .FirstOrDefaultAsync(m => m.FarmerId == id);
+        var products = await _context.Products
+            .Where(p => p.FarmerId == farmer.FarmerId)
+            .ToListAsync();
 
-        if (farmer == null) return NotFound();
-
-        return View(farmer);
+        return View(products);
     }
 }
